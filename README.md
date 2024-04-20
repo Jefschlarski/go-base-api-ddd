@@ -6,4 +6,10 @@
 ```
 ### Lista de pacotes instalados
 
+```
+Nesse projeto estou utilizando o pacote viper para utilizar arquivos .toml para configuração de ambiente
+```
+
 * go get github.com/gorilla/mux
+* go get -u github.com/spf13/viper
+* go get -u github.com/lib/pq  

@@ -1,0 +1,11 @@
+[database]
+host = "localhost"
+port = "5432"
+user = "postgres"
+pass = "mysecretpassword"
+name = "vendasdb"
+drive = "postgres"
+
+[api]
+url = "localhost"
+port = 8080

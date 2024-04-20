@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/src/configs"
 	"api/src/router"
 	"fmt"
 	"log"
@@ -8,8 +9,17 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, World!")
+
+	err := configs.Load()
+	if err != nil {
+		log.Fatal("Erro ao tentar carregar as configurações", err)
+	}
+
+	apiConfigs := configs.GetApiConfig()
+
 	r := router.GenRouter()
 
-	log.Fatal(http.ListenAndServe(":8080", r))
+	fmt.Println("Servidor escutando a porta ", apiConfigs.Port)
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", apiConfigs.Url, apiConfigs.Port), r))
 }

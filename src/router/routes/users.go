@@ -8,7 +8,7 @@ import (
 var userRoutes = []Routes{
 
 	{
-		Uri:     "/users",
+		Uri:     "/user",
 		Method:  http.MethodPost,
 		Handler: handlers.CreateUser,
 		ReqAuth: false,
@@ -20,19 +20,19 @@ var userRoutes = []Routes{
 		ReqAuth: false,
 	},
 	{
-		Uri:     "/users/{id}",
+		Uri:     "/user/{id}",
 		Method:  http.MethodGet,
 		Handler: handlers.GetUser,
 		ReqAuth: false,
 	},
 	{
-		Uri:     "/users/{id}",
+		Uri:     "/user/{id}",
 		Method:  http.MethodPut,
 		Handler: handlers.UpdateUser,
 		ReqAuth: false,
 	},
 	{
-		Uri:     "/users/{id}",
+		Uri:     "/user/{id}",
 		Method:  http.MethodDelete,
 		Handler: handlers.DeleteUser,
 		ReqAuth: false,
