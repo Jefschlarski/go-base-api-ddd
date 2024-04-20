@@ -11,6 +11,8 @@ use vendasdb;
 	-- CreatedAt time.Time 
 	-- UpdatedAt time.Time 
 
+DROP TABLE IF EXISTS users;
+
 --Cria a tabela users
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL primary key,
@@ -18,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     cpf varchar(11) not null unique,
     type int not null,
     phone varchar(11) not null unique,
-    password varchar(20) not null,
+    password varchar(100) not null,
     email varchar(50) not null unique,
     created_at TIMESTAMP default current_timestamp,
     updated_at TIMESTAMP default current_timestamp

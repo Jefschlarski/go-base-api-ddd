@@ -13,3 +13,4 @@ Nesse projeto estou utilizando o pacote viper para utilizar arquivos .toml para 
 * go get github.com/gorilla/mux
 * go get -u github.com/spf13/viper
 * go get -u github.com/lib/pq  
+* go get golang.org/x/crypto/bcrypt

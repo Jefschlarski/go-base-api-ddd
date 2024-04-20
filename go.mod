@@ -4,6 +4,8 @@ go 1.22.1
 
 require github.com/gorilla/mux v1.8.1
 
+require golang.org/x/crypto v0.22.0 // indirect
+
 require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

@@ -16,8 +16,10 @@ import (
 func Json(w http.ResponseWriter, code int, body interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	if err := json.NewEncoder(w).Encode(body); err != nil {
-		print(err)
+	if body != nil {
+		if err := json.NewEncoder(w).Encode(body); err != nil {
+			Error(w, http.StatusInternalServerError, err)
+		}
 	}
 }
 
