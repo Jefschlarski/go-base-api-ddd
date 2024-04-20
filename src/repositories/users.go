@@ -118,3 +118,22 @@ func (u users) Delete(id uint64) (int64, error) {
 
 	return rowsAffected, nil
 }
+
+// GetByEmail get a user name, email and password by email
+func (u users) GetByEmail(email string) (entities.User, error) {
+	rows, err := u.db.Query("select name, email, password from users where email = $1", email)
+	if err != nil {
+		return entities.User{}, err
+	}
+	defer rows.Close()
+
+	var user entities.User
+
+	if rows.Next() {
+		if err = rows.Scan(&user.Name, &user.Email, &user.Password); err != nil {
+			return entities.User{}, err
+		}
+	}
+
+	return user, nil
+}
