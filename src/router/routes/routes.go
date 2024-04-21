@@ -26,6 +26,8 @@ func ConfigRoutes(r *mux.Router) *mux.Router {
 
 	routes = append(routes, cityRoutes...)
 
+	routes = append(routes, addressRoutes...)
+
 	for _, route := range routes {
 
 		if route.ReqAuth {

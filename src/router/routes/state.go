@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"api/src/handlers"
+	"api/src/controllers"
 	"net/http"
 )
 
 var stateRoutes = Route{
 	Uri:     "/state",
 	Method:  http.MethodGet,
-	Handler: handlers.GetStates,
+	Handler: controllers.GetStates,
 	ReqAuth: false,
 }

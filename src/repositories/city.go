@@ -58,3 +58,32 @@ func (u city) GetByStateID(stateID uint64) ([]entities.City, error) {
 
 	return cities, nil
 }
+
+// GetByID get a city by ID
+func (u city) GetByID(id uint64, relation bool) (entities.City, error) {
+
+	rows, err := u.db.Query("select id, state_id, name from city where id = $1", id)
+	if err != nil {
+		return entities.City{}, err
+	}
+	defer rows.Close()
+
+	var city entities.City
+
+	if rows.Next() {
+		if err = rows.Scan(&city.ID, &city.StateID, &city.Name); err != nil {
+			return entities.City{}, err
+		}
+	}
+
+	if relation {
+		stateRepository := NewStateRepository(u.db)
+		state, err := stateRepository.GetByID(city.StateID)
+		if err != nil {
+			return entities.City{}, err
+		}
+		city.State = state
+	}
+
+	return city, nil
+}

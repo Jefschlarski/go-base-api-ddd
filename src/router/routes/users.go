@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"api/src/handlers"
+	"api/src/controllers"
 	"net/http"
 )
 
@@ -10,37 +10,37 @@ var userRoutes = []Route{
 	{
 		Uri:     "/user",
 		Method:  http.MethodPost,
-		Handler: handlers.CreateUser,
+		Handler: controllers.CreateUser,
 		ReqAuth: false,
 	},
 	{
 		Uri:     "/users",
 		Method:  http.MethodGet,
-		Handler: handlers.GetUsers,
+		Handler: controllers.GetUsers,
 		ReqAuth: true,
 	},
 	{
 		Uri:     "/user/{id}",
 		Method:  http.MethodGet,
-		Handler: handlers.GetUser,
+		Handler: controllers.GetUser,
 		ReqAuth: true,
 	},
 	{
 		Uri:     "/user/{id}",
 		Method:  http.MethodPut,
-		Handler: handlers.UpdateUser,
+		Handler: controllers.UpdateUser,
 		ReqAuth: true,
 	},
 	{
 		Uri:     "/user/{id}",
 		Method:  http.MethodDelete,
-		Handler: handlers.DeleteUser,
+		Handler: controllers.DeleteUser,
 		ReqAuth: true,
 	},
 	{
 		Uri:     "/user/{id}/update-password",
 		Method:  http.MethodPost,
-		Handler: handlers.UpdateUserPassword,
+		Handler: controllers.UpdateUserPassword,
 		ReqAuth: true,
 	},
 }

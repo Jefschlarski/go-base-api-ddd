@@ -36,3 +36,23 @@ func (u state) GetAll() ([]entities.State, error) {
 
 	return states, nil
 }
+
+// GetByID get a state by ID
+func (u state) GetByID(id uint64) (entities.State, error) {
+
+	rows, err := u.db.Query("select id, name, uf from state where id = $1", id)
+	if err != nil {
+		return entities.State{}, err
+	}
+	defer rows.Close()
+
+	var state entities.State
+
+	if rows.Next() {
+		if err = rows.Scan(&state.ID, &state.Name, &state.Uf); err != nil {
+			return entities.State{}, err
+		}
+	}
+
+	return state, nil
+}

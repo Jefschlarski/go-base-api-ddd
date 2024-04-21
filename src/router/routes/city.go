@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"api/src/handlers"
+	"api/src/controllers"
 	"net/http"
 )
 
@@ -9,13 +9,13 @@ var cityRoutes = []Route{
 	{
 		Uri:     "/city",
 		Method:  http.MethodGet,
-		Handler: handlers.GetCities,
+		Handler: controllers.GetCities,
 		ReqAuth: false,
 	},
 	{
 		Uri:     "/city/{state_id}",
 		Method:  http.MethodGet,
-		Handler: handlers.GetCitiesByStateID,
+		Handler: controllers.GetCitiesByStateID,
 		ReqAuth: false,
 	},
 }

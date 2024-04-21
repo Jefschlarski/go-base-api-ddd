@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"api/src/handlers"
+	"api/src/controllers"
 	"net/http"
 )
 
 var authRoutes = Route{
 	Uri:     "/auth",
 	Method:  http.MethodPost,
-	Handler: handlers.Auth,
+	Handler: controllers.Auth,
 	ReqAuth: false,
 }

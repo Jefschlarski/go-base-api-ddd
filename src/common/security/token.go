@@ -1,6 +1,7 @@
 package security
 
 import (
+	"api/src/common/errors"
 	"api/src/configs"
 	"fmt"
 	"net/http"
@@ -19,7 +20,7 @@ import (
 // Returns:
 // - string: the generated JWT token as a string.
 // - error: an error if the token generation fails.
-func GenerateToken(userID uint64) (string, error) {
+func GenerateToken(userID uint64) (string, *errors.Error) {
 
 	permissions := jwt.MapClaims{}
 	permissions["authorized"] = true
@@ -29,7 +30,12 @@ func GenerateToken(userID uint64) (string, error) {
 
 	AUTHConfig := configs.GetAuthConfig()
 
-	return token.SignedString([]byte(AUTHConfig.Key))
+	tokenString, err := token.SignedString([]byte(AUTHConfig.Key))
+	if err != nil {
+		return "", errors.NewError(err.Error(), http.StatusInternalServerError)
+	}
+
+	return tokenString, nil
 }
 
 // ValidateToken validates the given JWT token and returns the user ID if the token is valid.
@@ -90,15 +96,15 @@ func verifyTokenSignKey(token *jwt.Token) (interface{}, error) {
 }
 
 // VerifyId verifies that the user ID in the request matches with the token user ID.
-func VerifyId(id uint64, r *http.Request) error {
+func VerifyId(id uint64, r *http.Request) *errors.Error {
 
 	tokenId, err := ExtractUserID(r)
 	if err != nil {
-		return err
+		return errors.NewError(err.Error(), http.StatusForbidden)
 	}
 
 	if tokenId != id {
-		return fmt.Errorf("you don't have permission to change this resource")
+		return errors.NewError("you don't have permission to change this resource", http.StatusForbidden)
 	}
 
 	return nil

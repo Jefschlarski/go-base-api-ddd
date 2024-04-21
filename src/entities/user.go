@@ -1,41 +1,42 @@
 package entities
 
 import (
+	"api/src/common/errors"
 	"api/src/common/security"
 	"api/src/common/validate"
-	"errors"
+	"net/http"
 	"strings"
-	"time"
 )
 
 // User struct represents a user in the database
 type User struct {
-	ID        uint64    `json:"id,omitempty"`
-	Name      string    `json:"name,omitempty"`
-	Cpf       string    `json:"cpf,omitempty"`
-	Type      uint      `json:"type,omitempty"`
-	Phone     string    `json:"phone,omitempty"`
-	Password  string    `json:"password,omitempty"`
-	Email     string    `json:"email,omitempty"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	ID       uint64 `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
+	Cpf      string `json:"cpf,omitempty"`
+	Type     uint   `json:"type,omitempty"`
+	Phone    string `json:"phone,omitempty"`
+	Password string `json:"password,omitempty"`
+	Email    string `json:"email,omitempty"`
+	// CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt time.Time `json:"updated_at,omitempty"`
+
 }
 
 // Prepare prepares the user for further processing.
 //
 // It takes a boolean parameter `isCreate` which indicates whether the user is being created or not.
 // It returns an error if there is any validation error or nil if the user is prepared successfully.
-func (user *User) Prepare(isCreate bool) error {
+func (user *User) Prepare(isCreate bool) *errors.Error {
 	user.formater()
-	if err := user.validate(isCreate); err != nil {
-		return err
+	if err := user.validate(isCreate); err != "" {
+		return errors.NewError(err, http.StatusBadRequest)
 	}
 
 	if isCreate {
 
 		hash, err := security.Hash(user.Password)
 		if err != nil {
-			return err
+			return errors.NewError(err.Error(), http.StatusInternalServerError)
 		}
 
 		user.Password = string(hash)
@@ -47,32 +48,32 @@ func (user *User) Prepare(isCreate bool) error {
 // validate checks if the user fields are empty and returns an error if any field is empty.
 //
 // The function takes a boolean parameter `isCreate` which indicates whether the user is being created or not.
-// It returns an error if any required field is empty, otherwise it returns nil.
-func (user *User) validate(isCreate bool) error {
+// It returns an error string if any required field is empty, otherwise it returns nil.
+func (user *User) validate(isCreate bool) string {
 	if user.Name == "" {
-		return errors.New("name is required")
+		return "name is required"
 	}
 	if user.Cpf == "" {
-		return errors.New("cpf is required")
+		return "cpf is required"
 	}
 	if user.Type == 0 {
-		return errors.New("type is required")
+		return "type is required"
 	}
 	if user.Phone == "" {
-		return errors.New("phone is required")
+		return "phone is required"
 	}
 	if isCreate && user.Password == "" {
-		return errors.New("password is required")
+		return "password is required"
 	}
 	if user.Email == "" {
-		return errors.New("email is required")
+		return "email is required"
 	}
 
 	if err := validate.Email(user.Email); err != nil {
-		return err
+		return err.Error()
 	}
 
-	return nil
+	return ""
 }
 
 // formater remove empty spaces in user fields

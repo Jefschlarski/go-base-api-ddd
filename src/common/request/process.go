@@ -1,15 +1,15 @@
 package request
 
 import (
+	"api/src/common/errors"
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 )
 
 type entity interface{}
 
-// processRequestBody reads the request body, unmarshals it into the provided entity, and returns an error if any.
+// ProcessBody reads the request body, unmarshals it into the provided entity, and returns an error if any.
 //
 // Parameters:
 // - r: *http.Request - the HTTP request containing the body to process.
@@ -17,16 +17,16 @@ type entity interface{}
 //
 // Returns:
 // - error: an error if the request body could not be read or unmarshaled.
-func ProcessBody(r *http.Request, entity entity) (err error) {
+func ProcessBody(r *http.Request, entity entity) *errors.Error {
 	defer r.Body.Close()
 
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		return errors.New("failed to read request body: " + err.Error())
+		return errors.NewError("invalid request body: "+err.Error(), http.StatusBadRequest)
 	}
 
 	if err := json.Unmarshal(requestBody, entity); err != nil {
-		return errors.New("invalid request body: " + err.Error())
+		return errors.NewError("invalid request body: "+err.Error(), http.StatusBadRequest)
 	}
 
 	return nil

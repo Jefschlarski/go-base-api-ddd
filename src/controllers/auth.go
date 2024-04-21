@@ -1,6 +1,7 @@
-package handlers
+package controllers
 
 import (
+	"api/src/common/errors"
 	"api/src/common/request"
 	"api/src/common/responses"
 	"api/src/common/security"
@@ -13,33 +14,33 @@ import (
 func Auth(w http.ResponseWriter, r *http.Request) {
 	var auth dtos.Auth
 	if err := request.ProcessBody(r, &auth); err != nil {
-		responses.Error(w, http.StatusBadRequest, err)
+		responses.Error(w, err)
 		return
 	}
 
 	db, err := database.OpenConnection()
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		responses.Error(w, err)
 		return
 	}
 	defer db.Close()
 
 	userRepository := repositories.NewUserRepository(db)
 
-	user, err := userRepository.GetByEmail(auth.Email)
-	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+	user, error := userRepository.GetByEmail(auth.Email)
+	if error != nil {
+		responses.Error(w, errors.NewError("invalid credentials", http.StatusUnauthorized))
 		return
 	}
 
-	if err = security.Compare(user.Password, auth.Password); err != nil {
-		responses.Error(w, http.StatusUnauthorized, err)
+	if error = security.Compare(user.Password, auth.Password); error != nil {
+		responses.Error(w, errors.NewError("invalid credentials", http.StatusUnauthorized))
 		return
 	}
 
 	token, err := security.GenerateToken(user.ID)
 	if err != nil {
-		responses.Error(w, http.StatusInternalServerError, err)
+		responses.Error(w, err)
 		return
 	}
 

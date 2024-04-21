@@ -1,6 +1,7 @@
 package responses
 
 import (
+	"api/src/common/errors"
 	"encoding/json"
 	"net/http"
 )
@@ -18,7 +19,7 @@ func Json(w http.ResponseWriter, code int, body interface{}) {
 	w.WriteHeader(code)
 	if body != nil {
 		if err := json.NewEncoder(w).Encode(body); err != nil {
-			Error(w, http.StatusInternalServerError, err)
+			Error(w, errors.NewError(err.Error(), http.StatusInternalServerError))
 		}
 	}
 }
@@ -31,10 +32,10 @@ func Json(w http.ResponseWriter, code int, body interface{}) {
 // - err: error - the error to be included in the JSON response.
 //
 // Return type: None.
-func Error(w http.ResponseWriter, code int, err error) {
-	Json(w, code, struct {
+func Error(w http.ResponseWriter, err *errors.Error) {
+	Json(w, err.Status, struct {
 		Erro string `json:"error"`
 	}{
-		Erro: err.Error(),
+		Erro: err.Message,
 	})
 }
