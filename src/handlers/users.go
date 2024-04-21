@@ -3,9 +3,12 @@ package handlers
 import (
 	"api/src/common/request"
 	"api/src/common/responses"
+	"api/src/common/security"
 	"api/src/database"
+	"api/src/dtos"
 	"api/src/entities"
 	"api/src/repositories"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -99,6 +102,11 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = security.VerifyId(userID, r); err != nil {
+		responses.Error(w, http.StatusForbidden, err)
+		return
+	}
+
 	var user entities.User
 	if err = request.ProcessBody(r, &user); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
@@ -142,6 +150,11 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if err = security.VerifyId(userID, r); err != nil {
+		responses.Error(w, http.StatusForbidden, err)
+		return
+	}
+
 	db, err := database.OpenConnection()
 	if err != nil {
 		responses.Error(w, http.StatusInternalServerError, err)
@@ -164,4 +177,64 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.Json(w, http.StatusOK, fmt.Sprintf("Deleted %d rows", rowsAffected))
+}
+
+// UpdateUserPassword updates a user password
+func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
+
+	userID, err := request.GetId(r)
+	if err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err = security.VerifyId(userID, r); err != nil {
+		responses.Error(w, http.StatusForbidden, err)
+		return
+	}
+
+	var updatePassword dtos.UpdatePassword
+	if err = request.ProcessBody(r, &updatePassword); err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	db, err := database.OpenConnection()
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+	defer db.Close()
+
+	repository := repositories.NewUsersRepository(db)
+
+	currentPassword, err := repository.GetPassword(userID)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	if err = security.Compare(currentPassword, updatePassword.OldPassword); err != nil {
+		responses.Error(w, http.StatusBadRequest, errors.New("the current password provided doesn't match with the password saved in database"))
+		return
+	}
+
+	if err = security.Compare(currentPassword, updatePassword.NewPassword); err == nil {
+		responses.Error(w, http.StatusBadRequest, errors.New("the new password provided should be different from the current password"))
+		return
+	}
+
+	hash, err := security.Hash(updatePassword.NewPassword)
+	if err != nil {
+		responses.Error(w, http.StatusBadRequest, err)
+		return
+	}
+
+	rowsAffected, err := repository.UpdatePassword(userID, string(hash))
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.Json(w, http.StatusOK, fmt.Sprintf("Updated %d rows", rowsAffected))
 }

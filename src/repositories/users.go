@@ -3,6 +3,7 @@ package repositories
 import (
 	"api/src/entities"
 	"database/sql"
+	"fmt"
 )
 
 // users struct represents a user repository
@@ -121,7 +122,7 @@ func (u users) Delete(id uint64) (int64, error) {
 
 // GetByEmail get a user name, email and password by email
 func (u users) GetByEmail(email string) (entities.User, error) {
-	rows, err := u.db.Query("select name, email, password from users where email = $1", email)
+	rows, err := u.db.Query("select id, name, email, password from users where email = $1", email)
 	if err != nil {
 		return entities.User{}, err
 	}
@@ -130,10 +131,53 @@ func (u users) GetByEmail(email string) (entities.User, error) {
 	var user entities.User
 
 	if rows.Next() {
-		if err = rows.Scan(&user.Name, &user.Email, &user.Password); err != nil {
+		if err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.Password); err != nil {
 			return entities.User{}, err
 		}
+	} else {
+		return entities.User{}, fmt.Errorf("there is no user with email %s", email)
 	}
 
 	return user, nil
+}
+
+// getPassword get a user password by id
+func (u users) GetPassword(id uint64) (string, error) {
+	rows, err := u.db.Query("select password from users where id = $1", id)
+	if err != nil {
+		return "", err
+	}
+	defer rows.Close()
+
+	var password string
+
+	if rows.Next() {
+		if err = rows.Scan(&password); err != nil {
+			return "", err
+		}
+	}
+
+	return password, nil
+}
+
+// UpdatePassword update a user password
+func (u users) UpdatePassword(id uint64, password string) (int64, error) {
+
+	statement, err := u.db.Prepare("update users set password = $1 where id = $2")
+	if err != nil {
+		return 0, err
+	}
+	defer statement.Close()
+
+	result, err := statement.Exec(password, id)
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rowsAffected, nil
 }

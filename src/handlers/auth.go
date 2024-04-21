@@ -5,13 +5,13 @@ import (
 	"api/src/common/responses"
 	"api/src/common/security"
 	"api/src/database"
-	"api/src/entities"
+	"api/src/dtos"
 	"api/src/repositories"
 	"net/http"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {
-	var auth entities.Auth
+	var auth dtos.Auth
 	if err := request.ProcessBody(r, &auth); err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -37,5 +37,11 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	responses.Json(w, http.StatusOK, user)
+	token, err := security.GenerateToken(user.ID)
+	if err != nil {
+		responses.Error(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	responses.Json(w, http.StatusOK, token)
 }

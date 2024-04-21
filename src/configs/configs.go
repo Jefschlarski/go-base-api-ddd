@@ -5,8 +5,9 @@ import "github.com/spf13/viper"
 var cfg *config
 
 type config struct {
-	API APIConfig
-	DB  DBConfig
+	API  APIConfig
+	DB   DBConfig
+	AUTH AUTHConfig
 }
 
 type APIConfig struct {
@@ -23,22 +24,23 @@ type DBConfig struct {
 	Drive    string
 }
 
+type AUTHConfig struct {
+	Key string
+}
+
 func init() {
 	viper.SetDefault("database.host", "localhost")
 	viper.SetDefault("database.port", "5432")
 	viper.SetDefault("database.drive", "postgres")
 	viper.SetDefault("api.url", "http://localhost")
 	viper.SetDefault("api.port", "8080")
+	viper.SetDefault("auth.key", "SSbw4fKgoUPHS75Epjz1g2R/AOd5ZTonG9At5UNZaSZiIHhKf7nw/a1BaTDHeasX+e8pfxCsrKIrkaB2kfrZLA==")
 }
 
-/*
-Função para carregar as configurações.
-
-Retorno:
-
-	error: retorno caso um erro ocorra
-
-*/
+// Load reads the configuration file named "config.toml" located in the root directory.
+// It populates the global variable "cfg" with the values read from the file.
+//
+// It returns an error if there was a problem reading the configuration file.
 func Load() error {
 	viper.SetConfigName("config")
 	viper.SetConfigType("toml")
@@ -66,29 +68,33 @@ func Load() error {
 		Drive:    viper.GetString("database.drive"),
 	}
 
+	cfg.AUTH = AUTHConfig{
+		Key: viper.GetString("auth.key"),
+	}
+
 	return nil
 }
 
-/*
-Função para pegar a configuração da API.
-
-Retorno:
-
-	APIConfig: struct da configuração da API
-
-*/
+// GetApiConfig returns the API configuration.
+//
+// No parameters.
+// Returns an APIConfig struct.
 func GetApiConfig() APIConfig {
 	return cfg.API
 }
 
-/*
-Função para pegar a configuração do banco de dados.
-
-Retorno:
-
-	DBConfig: struct da configuração do banco de dados
-
-*/
+// GetDbConfig returns the database configuration.
+//
+// No parameters.
+// Returns a DBConfig struct.
 func GetDbConfig() DBConfig {
 	return cfg.DB
+}
+
+// GetAuthConfig retrieves the authentication configuration.
+//
+// Returns:
+//   AUTHConfig: struct of the authentication configuration
+func GetAuthConfig() AUTHConfig {
+	return cfg.AUTH
 }
