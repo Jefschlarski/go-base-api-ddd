@@ -6,20 +6,20 @@ import (
 	"fmt"
 )
 
-// users struct represents a user repository
-type users struct {
+// user struct represents a user repository
+type user struct {
 	db *sql.DB
 }
 
-// NewUsersRepository create a new user repository
-func NewUsersRepository(db *sql.DB) *users {
-	return &users{db}
+// NewUserRepository create a new user repository
+func NewUserRepository(db *sql.DB) *user {
+	return &user{db}
 }
 
 // Create insert a new user in the database
-func (u users) Create(user entities.User) (uint64, error) {
+func (u user) Create(user entities.User) (uint64, error) {
 
-	statement, err := u.db.Prepare("insert into users (name, cpf, type, phone, password, email) values ($1, $2, $3, $4, $5, $6) returning id")
+	statement, err := u.db.Prepare("insert into user (name, cpf, type, phone, password, email) values ($1, $2, $3, $4, $5, $6) returning id")
 	if err != nil {
 		return 0, err
 	}
@@ -35,9 +35,9 @@ func (u users) Create(user entities.User) (uint64, error) {
 }
 
 // Get get a user by ID
-func (u users) Get(id uint64) (entities.User, error) {
+func (u user) Get(id uint64) (entities.User, error) {
 
-	rows, err := u.db.Query("select name, cpf, type, phone, email, created_at, updated_at from users where id = $1", id)
+	rows, err := u.db.Query("select name, cpf, type, phone, email, created_at, updated_at from user where id = $1", id)
 	if err != nil {
 		return entities.User{}, err
 	}
@@ -55,9 +55,9 @@ func (u users) Get(id uint64) (entities.User, error) {
 }
 
 // GetAll get all users
-func (u users) GetAll() ([]entities.User, error) {
+func (u user) GetAll() ([]entities.User, error) {
 
-	rows, err := u.db.Query("select id, name, cpf, type, phone, email, created_at, updated_at from users")
+	rows, err := u.db.Query("select id, name, cpf, type, phone, email, created_at, updated_at from user")
 	if err != nil {
 		return nil, err
 	}
@@ -77,9 +77,9 @@ func (u users) GetAll() ([]entities.User, error) {
 }
 
 // Update update a user
-func (u users) Update(id uint64, user entities.User) (int64, error) {
+func (u user) Update(id uint64, user entities.User) (int64, error) {
 
-	statement, err := u.db.Prepare("update users set name = $1, cpf = $2, type = $3, phone = $4, email = $5, updated_at = $6 where id = $7")
+	statement, err := u.db.Prepare("update user set name = $1, cpf = $2, type = $3, phone = $4, email = $5, updated_at = $6 where id = $7")
 	if err != nil {
 		return 0, err
 	}
@@ -99,9 +99,9 @@ func (u users) Update(id uint64, user entities.User) (int64, error) {
 }
 
 // Delete delete a user
-func (u users) Delete(id uint64) (int64, error) {
+func (u user) Delete(id uint64) (int64, error) {
 
-	statement, err := u.db.Prepare("delete from users where id = $1")
+	statement, err := u.db.Prepare("delete from user where id = $1")
 	if err != nil {
 		return 0, err
 	}
@@ -121,8 +121,8 @@ func (u users) Delete(id uint64) (int64, error) {
 }
 
 // GetByEmail get a user name, email and password by email
-func (u users) GetByEmail(email string) (entities.User, error) {
-	rows, err := u.db.Query("select id, name, email, password from users where email = $1", email)
+func (u user) GetByEmail(email string) (entities.User, error) {
+	rows, err := u.db.Query("select id, name, email, password from user where email = $1", email)
 	if err != nil {
 		return entities.User{}, err
 	}
@@ -142,8 +142,8 @@ func (u users) GetByEmail(email string) (entities.User, error) {
 }
 
 // getPassword get a user password by id
-func (u users) GetPassword(id uint64) (string, error) {
-	rows, err := u.db.Query("select password from users where id = $1", id)
+func (u user) GetPassword(id uint64) (string, error) {
+	rows, err := u.db.Query("select password from user where id = $1", id)
 	if err != nil {
 		return "", err
 	}
@@ -161,9 +161,9 @@ func (u users) GetPassword(id uint64) (string, error) {
 }
 
 // UpdatePassword update a user password
-func (u users) UpdatePassword(id uint64, password string) (int64, error) {
+func (u user) UpdatePassword(id uint64, password string) (int64, error) {
 
-	statement, err := u.db.Prepare("update users set password = $1 where id = $2")
+	statement, err := u.db.Prepare("update user set password = $1 where id = $2")
 	if err != nil {
 		return 0, err
 	}

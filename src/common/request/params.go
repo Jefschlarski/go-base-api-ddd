@@ -8,9 +8,9 @@ import (
 )
 
 // GetId retrieves the ID from the request parameters.
-func GetId(r *http.Request) (uint64, error) {
+func GetId(r *http.Request, p string) (uint64, error) {
 	params := mux.Vars(r)
-	id, err := strconv.ParseUint(params["id"], 10, 64)
+	id, err := strconv.ParseUint(params[p], 10, 64)
 	if err != nil {
 		return 0, err
 	}

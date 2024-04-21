@@ -34,7 +34,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	user.ID, err = repository.Create(user)
 	if err != nil {
@@ -55,7 +55,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	users, err := repository.GetAll()
 	if err != nil {
@@ -69,7 +69,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 // GetUser gets a user
 func GetUser(w http.ResponseWriter, r *http.Request) {
 
-	userID, err := request.GetId(r)
+	userID, err := request.GetId(r, "id")
 	if err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -82,7 +82,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	user, err := repository.Get(userID)
 	if err != nil {
@@ -96,7 +96,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 // UpdateUser updates a user
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
-	userID, err := request.GetId(r)
+	userID, err := request.GetId(r, "id")
 	if err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -125,7 +125,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	rowsAffected, err := repository.Update(userID, user)
 	if err != nil {
@@ -144,7 +144,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 // DeleteUser deletes a user
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
-	userID, err := request.GetId(r)
+	userID, err := request.GetId(r, "id")
 	if err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -162,7 +162,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	rowsAffected, err := repository.Delete(userID)
 	if err != nil {
@@ -182,7 +182,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 // UpdateUserPassword updates a user password
 func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 
-	userID, err := request.GetId(r)
+	userID, err := request.GetId(r, "id")
 	if err != nil {
 		responses.Error(w, http.StatusBadRequest, err)
 		return
@@ -206,7 +206,7 @@ func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	repository := repositories.NewUsersRepository(db)
+	repository := repositories.NewUserRepository(db)
 
 	currentPassword, err := repository.GetPassword(userID)
 	if err != nil {

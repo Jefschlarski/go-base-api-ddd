@@ -17,8 +17,15 @@ type Route struct {
 
 // ConfigRoutes set all routes in the router
 func ConfigRoutes(r *mux.Router) *mux.Router {
+
 	routes := userRoutes
+
 	routes = append(routes, authRoutes)
+
+	routes = append(routes, stateRoutes)
+
+	routes = append(routes, cityRoutes...)
+
 	for _, route := range routes {
 
 		if route.ReqAuth {

@@ -24,7 +24,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	userRepository := repositories.NewUsersRepository(db)
+	userRepository := repositories.NewUserRepository(db)
 
 	user, err := userRepository.GetByEmail(auth.Email)
 	if err != nil {
