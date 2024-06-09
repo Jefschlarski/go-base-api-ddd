@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS public.address;
 CREATE TABLE IF NOT EXISTS public.address (
     id SERIAL primary key,
     user_id integer NOT NULL,
-    complement character,
+    complement text,
     number integer NOT NULL,
     cep varchar(10) NOT NULL,
     city_id integer NOT NULL,
