@@ -1,9 +1,10 @@
 package services
 
 import (
+	"api/src/api/dtos"
 	"api/src/application/common/errors"
 	"api/src/application/interfaces"
-	"api/src/interface/api/dtos"
+	"fmt"
 	"net/http"
 )
 
@@ -18,9 +19,12 @@ func NewCreateAddress(addressRepo interfaces.CreateAddress, cityRepo interfaces.
 
 func (s *createAddress) Create(createAddressDto *dtos.CreateAddressDto) *errors.Error {
 
-	_, err := s.cityRepository.Get(createAddressDto.CityID)
+	city, err := s.cityRepository.Get(createAddressDto.CityID)
 	if err != nil {
 		return errors.NewError(err.Error(), http.StatusInternalServerError)
+	}
+	if city == (dtos.CityDto{}) {
+		return errors.NewError(fmt.Sprintf("city with id %d not found", createAddressDto.CityID), http.StatusNotFound)
 	}
 
 	_, error := s.addressRepository.Create(*createAddressDto)

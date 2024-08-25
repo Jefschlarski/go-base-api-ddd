@@ -8,6 +8,31 @@ import (
 	_ "github.com/lib/pq" // Driver PostgreSQL
 )
 
+type database struct {
+	db *sql.DB
+}
+
+func NewDatabase() (DatabaseInterface, error) {
+	db, err := OpenConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	return &database{db}, nil
+}
+
+func (d *database) Query(query string, args ...any) (*sql.Rows, error) {
+	return d.db.Query(query, args...)
+}
+
+func (d *database) Close() {
+	d.db.Close()
+}
+
+func (d *database) Prepare(query string) (*sql.Stmt, error) {
+	return d.db.Prepare(query)
+}
+
 // OpenConnection open connection with database and return a connection
 func OpenConnection() (*sql.DB, error) {
 	conf := configs.GetDbConfig()

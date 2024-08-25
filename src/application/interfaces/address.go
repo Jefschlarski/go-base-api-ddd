@@ -1,7 +1,8 @@
 package interfaces
 
 import (
-	"api/src/interface/api/dtos"
+	"api/src/api/dtos"
+	"api/src/domain/entities"
 )
 
 type CreateAddress interface {
@@ -13,15 +14,15 @@ type DeleteAddress interface {
 }
 
 type GetAddressByUserId interface {
-	GetByUserID(uint64) ([]dtos.AddressDto, error)
+	GetByUserID(uint64) ([]entities.Address, error)
 }
 
 type GetAddress interface {
-	Get(uint64) (dtos.AddressDto, error)
+	Get(uint64) (entities.Address, error)
 }
 
 type GetAllAddresses interface {
-	GetAll() ([]dtos.AddressDto, error)
+	GetAll() ([]entities.Address, error)
 }
 
 type UpdateAddress interface {

@@ -1,9 +1,9 @@
 [database]
 host = "localhost"
-port = "5433"
-user = "admin"
-pass = "admin"
-name = "database"
+port = "5432"
+user = "postgres"
+pass = "pg@syS"
+name = "postgres"
 drive = "postgres"
 
 [api]

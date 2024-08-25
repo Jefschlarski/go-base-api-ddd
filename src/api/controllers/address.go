@@ -1,13 +1,15 @@
 package controllers
 
 import (
+	"api/src/api/dtos"
+	"api/src/application/common/errors"
 	"api/src/application/common/request"
 	"api/src/application/common/responses"
 	"api/src/application/common/security"
 	addressServices "api/src/application/services/address"
 	cityServices "api/src/application/services/city"
+	"api/src/infrastructure/database"
 	"api/src/infrastructure/repositories"
-	"api/src/interface/api/dtos"
 	"net/http"
 )
 
@@ -19,8 +21,25 @@ func CreateAddress(w http.ResponseWriter, r *http.Request) {
 		responses.Error(w, err)
 		return
 	}
-	AddressRepository := repositories.NewAddressRepository()
-	CityRepository := repositories.NewCityRepository()
+
+	userID, error := security.ExtractUserID(r)
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	address.UserID = userID
+
+	db, error := database.NewDatabase()
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
+
+	AddressRepository := repositories.NewAddressRepository(db)
+	CityRepository := repositories.NewCityRepository(db)
 
 	service := addressServices.NewCreateAddress(AddressRepository, CityRepository)
 	err = service.Create(&address)
@@ -45,15 +64,24 @@ func GetAddressesByUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := repositories.NewAddressRepository()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	service := addressServices.NewGetAddressByUserId(repo)
+	repo := repositories.NewAddressRepository(db)
+	cityRepo := repositories.NewCityRepository(db)
+
+	service := addressServices.NewGetAddressByUserId(repo, cityRepo)
 	addresses, err := service.GetByUserID(userID)
 	if err != nil {
 		responses.Error(w, err)
 		return
 	}
-	responses.Json(w, http.StatusCreated, addresses)
+	responses.Json(w, http.StatusOK, addresses)
 }
 
 func UpdateAddressesByID(w http.ResponseWriter, r *http.Request) {
@@ -66,7 +94,15 @@ func UpdateAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cityRepositories := repositories.NewCityRepository()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
+
+	cityRepositories := repositories.NewCityRepository(db)
 
 	cityService := cityServices.NewGetCity(cityRepositories)
 	_, err = cityService.Get(address.CityID)
@@ -86,7 +122,7 @@ func UpdateAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := repositories.NewAddressRepository()
+	repo := repositories.NewAddressRepository(db)
 
 	service := addressServices.NewUpdateAddress(repo)
 
@@ -107,7 +143,15 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := repositories.NewAddressRepository()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
+
+	repo := repositories.NewAddressRepository(db)
 
 	service := addressServices.NewGetAddress(repo)
 	address, err := service.Get(addressID)
@@ -121,7 +165,15 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 
 func GetAddresses(w http.ResponseWriter, r *http.Request) {
 
-	repo := repositories.NewAddressRepository()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
+
+	repo := repositories.NewAddressRepository(db)
 
 	service := addressServices.NewGetAllAddresses(repo)
 
@@ -141,7 +193,15 @@ func DeleteAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	repo := repositories.NewAddressRepository()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err = errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
+
+	repo := repositories.NewAddressRepository(db)
 
 	service := addressServices.NewDeleteAddress(repo)
 

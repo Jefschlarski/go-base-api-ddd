@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"api/src/interface/api/controllers"
+	"api/src/api/controllers"
 	"net/http"
 )
 
 var addressRoutes = []Route{
 	{
-		Uri:     "/user/{user_id}/address",
+		Uri:     "/address",
 		Method:  http.MethodPost,
 		Handler: controllers.CreateAddress,
 		ReqAuth: true,

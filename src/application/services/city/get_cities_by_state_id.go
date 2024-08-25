@@ -1,22 +1,22 @@
 package services
 
 import (
+	"api/src/api/dtos"
 	"api/src/application/common/errors"
 	"api/src/application/interfaces"
-	"api/src/interface/api/dtos"
 	"net/http"
 )
 
 type getCitiesByStateID struct {
-	cityRepository interfaces.GetAllCities
+	cityRepository interfaces.GetCitiesByStateID
 }
 
-func NewGetCitiesByStateID(repo interfaces.GetAllCities) *getCitiesByStateID {
+func NewGetCitiesByStateID(repo interfaces.GetCitiesByStateID) *getCitiesByStateID {
 	return &getCitiesByStateID{cityRepository: repo}
 }
 
 func (s *getCitiesByStateID) GetByStateID(id uint64) ([]dtos.CityDto, *errors.Error) {
-	cities, error := s.cityRepository.GetAll()
+	cities, error := s.cityRepository.GetByStateID(id)
 	if error != nil {
 		return nil, errors.NewError(error.Error(), http.StatusInternalServerError)
 	}

@@ -1,9 +1,9 @@
 package services
 
 import (
+	"api/src/api/dtos"
 	"api/src/application/common/errors"
 	"api/src/application/interfaces"
-	"api/src/interface/api/dtos"
 	"net/http"
 )
 

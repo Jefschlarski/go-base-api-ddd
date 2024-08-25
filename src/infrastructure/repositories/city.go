@@ -1,29 +1,30 @@
 package repositories
 
 import (
-	repositoriesInterfaces "api/src/domain/repositories"
+	"api/src/api/dtos"
 	"api/src/infrastructure/database"
-	"api/src/interface/api/dtos"
 )
 
+type CityRepositoryInterface interface {
+	Get(uint64) (dtos.CityDto, error)
+	GetAll() ([]dtos.CityDto, error)
+	GetByStateID(uint64) ([]dtos.CityDto, error)
+}
+
 // city struct represents a city repository
-type cityRepository struct{}
+type cityRepository struct {
+	db database.DatabaseInterface
+}
 
 // NewCityRepository create a new city repository
-func NewCityRepository() repositoriesInterfaces.CityRepository {
-	return &cityRepository{}
+func NewCityRepository(db database.DatabaseInterface) CityRepositoryInterface {
+	return &cityRepository{db}
 }
 
 // GetAll get all cities in the database
-func (u cityRepository) GetAll() ([]dtos.CityDto, error) {
+func (c cityRepository) GetAll() ([]dtos.CityDto, error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query("select id, state_id, name from city")
+	rows, err := c.db.Query("select id, state_id, name from city")
 	if err != nil {
 		return nil, err
 	}
@@ -43,15 +44,9 @@ func (u cityRepository) GetAll() ([]dtos.CityDto, error) {
 }
 
 // GetByStateID get all cities by state ID
-func (u cityRepository) GetByStateID(stateID uint64) ([]dtos.CityDto, error) {
+func (c cityRepository) GetByStateID(stateID uint64) ([]dtos.CityDto, error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	rows, err := db.Query("select id, state_id, name from city where state_id = $1", stateID)
+	rows, err := c.db.Query("select id, state_id, name from city where state_id = $1", stateID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,21 +66,13 @@ func (u cityRepository) GetByStateID(stateID uint64) ([]dtos.CityDto, error) {
 }
 
 // Get get a city by ID and relation
-func (u cityRepository) Get(id uint64) (city dtos.CityDto, err error) {
+func (c cityRepository) Get(id uint64) (city dtos.CityDto, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	rows, err := db.Query("select id, state_id, name from city where id = $1", id)
+	rows, err := c.db.Query("select id, state_id, name from city where id = $1", id)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
-
-	print(rows)
 
 	if rows.Next() {
 		if err = rows.Scan(&city.ID, &city.StateID, &city.Name); err != nil {

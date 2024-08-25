@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS "user";
 
---Cria a tabela users
 CREATE TABLE IF NOT EXISTS "user" (
     id SERIAL primary key,
     name varchar(50) not null,

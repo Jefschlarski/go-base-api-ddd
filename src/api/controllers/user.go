@@ -1,12 +1,15 @@
 package controllers
 
 import (
+	"api/src/api/dtos"
+	"api/src/application/common/errors"
 	"api/src/application/common/request"
 	"api/src/application/common/responses"
 	"api/src/application/common/security"
-	"api/src/application/services"
+	services "api/src/application/services/user"
 	"api/src/domain/entities"
-	"api/src/interface/api/dtos"
+	"api/src/infrastructure/database"
+	"api/src/infrastructure/repositories"
 	"fmt"
 	"net/http"
 )
@@ -20,13 +23,23 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	err := service.Create(&user)
+	createUser := services.NewCreateUser(repositories.NewUserRepository(db))
+
+	id, err := createUser.Execute(&user)
 	if err != nil {
 		responses.Error(w, err)
 		return
 	}
+
+	user.ID = id
 
 	responses.Json(w, http.StatusCreated, user)
 }
@@ -34,9 +47,17 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 // GetUsers gets all users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	users, err := service.GetAll()
+	getAllUsers := services.NewGetAllUsers(repositories.NewUserRepository(db))
+
+	users, err := getAllUsers.Execute()
 	if err != nil {
 		responses.Error(w, err)
 		return
@@ -54,9 +75,17 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	user, err := service.Get(userID)
+	getUser := services.NewGetUser(repositories.NewUserRepository(db))
+
+	user, err := getUser.Execute(userID)
 	if err != nil {
 		responses.Error(w, err)
 		return
@@ -85,9 +114,17 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	rowsAffected, err := service.Update(userID, user)
+	updateUser := services.NewUpdateUser(repositories.NewUserRepository(db))
+
+	rowsAffected, err := updateUser.Execute(userID, user)
 	if err != nil {
 		responses.Error(w, err)
 		return
@@ -109,9 +146,17 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	rowsAffected, err := service.Delete(userID)
+	deleteUser := services.NewDeleteUser(repositories.NewUserRepository(db))
+
+	rowsAffected, err := deleteUser.Execute(userID)
 	if err != nil {
 		responses.Error(w, err)
 		return
@@ -140,9 +185,17 @@ func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	service := services.NewUserService()
+	db, error := database.NewDatabase()
+	if error != nil {
+		err := errors.NewError(error.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
+		return
+	}
+	defer db.Close()
 
-	rowsAffected, err := service.UpdatePassword(userID, updatePassword)
+	updateUserPassword := services.NewUpdateUserPassword(repositories.NewUserRepository(db))
+
+	rowsAffected, err := updateUserPassword.Execute(userID, updatePassword)
 	if err != nil {
 		responses.Error(w, err)
 		return

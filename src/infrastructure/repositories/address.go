@@ -1,29 +1,34 @@
 package repositories
 
 import (
-	repositoriesInterfaces "api/src/domain/repositories"
+	"api/src/api/dtos"
+	"api/src/domain/entities"
 	"api/src/infrastructure/database"
-	"api/src/interface/api/dtos"
 )
 
+type AddressRepositoryInterface interface {
+	Create(dtos.CreateAddressDto) (uint64, error)
+	GetByUserID(uint64) ([]entities.Address, error)
+	Update(dtos.AddressDto) (int64, error)
+	Get(uint64) (entities.Address, error)
+	GetAll() ([]entities.Address, error)
+	Delete(id uint64) (int64, error)
+}
+
 // address struct represents a address repository
-type addressRepository struct{}
+type addressRepository struct {
+	db database.DatabaseInterface
+}
 
 // NewAddressRepository create a new address repository
-func NewAddressRepository() repositoriesInterfaces.AddressRepository {
-	return &addressRepository{}
+func NewAddressRepository(db database.DatabaseInterface) AddressRepositoryInterface {
+	return &addressRepository{db}
 }
 
 // Create insert a new address in the database
-func (u addressRepository) Create(address dtos.CreateAddressDto) (lastInsertID uint64, err error) {
+func (a addressRepository) Create(address dtos.CreateAddressDto) (lastInsertID uint64, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	statement, err := db.Prepare(`insert into "address" (user_id, complement, number, cep, city_id) values ($1, $2, $3, $4, $5) returning id`)
+	statement, err := a.db.Prepare(`insert into "address" (user_id, complement, number, cep, city_id) values ($1, $2, $3, $4, $5) returning id`)
 	if err != nil {
 		return
 	}
@@ -38,23 +43,17 @@ func (u addressRepository) Create(address dtos.CreateAddressDto) (lastInsertID u
 }
 
 // GetAddressesByUserID get all addresses by user id
-func (u addressRepository) GetByUserID(userID uint64) (addressess []dtos.AddressDto, err error) {
+func (a addressRepository) GetByUserID(userID uint64) (addressess []entities.Address, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`select id, user_id, complement, number, cep, city_id from "address" where user_id = $1`, userID)
+	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address" where user_id = $1`, userID)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var address dtos.AddressDto
-		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
+		var address entities.Address
+		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
 			return
 		}
 		addressess = append(addressess, address)
@@ -64,15 +63,9 @@ func (u addressRepository) GetByUserID(userID uint64) (addressess []dtos.Address
 }
 
 // UpdateAddressesByID updates a user address by address id
-func (u addressRepository) Update(address dtos.AddressDto) (rowsAffected int64, err error) {
+func (a addressRepository) Update(address dtos.AddressDto) (rowsAffected int64, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	statement, err := db.Prepare(`update "address" set complement = $1, number = $2, cep = $3, city_id = $4 where id = $5`)
+	statement, err := a.db.Prepare(`update "address" set complement = $1, number = $2, cep = $3, city_id = $4 where id = $5`)
 	if err != nil {
 		return
 	}
@@ -92,22 +85,16 @@ func (u addressRepository) Update(address dtos.AddressDto) (rowsAffected int64, 
 }
 
 // GetAddressByID get a address by id
-func (u addressRepository) Get(id uint64) (address dtos.AddressDto, err error) {
+func (a addressRepository) Get(id uint64) (address entities.Address, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	row, err := db.Query(`select id, user_id, complement, number, cep, city_id from "address" where id = $1`, id)
+	row, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address" where id = $1`, id)
 	if err != nil {
 		return
 	}
 	defer row.Close()
 
 	if row.Next() {
-		if err = row.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
+		if err = row.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
 			return
 		}
 	}
@@ -116,23 +103,17 @@ func (u addressRepository) Get(id uint64) (address dtos.AddressDto, err error) {
 }
 
 // GetAddresses get all addresses
-func (u addressRepository) GetAll() (addressess []dtos.AddressDto, err error) {
+func (a addressRepository) GetAll() (addressess []entities.Address, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	rows, err := db.Query(`select id, user_id, complement, number, cep, city_id from "address"`)
+	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address"`)
 	if err != nil {
 		return
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var address dtos.AddressDto
-		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
+		var address entities.Address
+		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
 			return
 		}
 		addressess = append(addressess, address)
@@ -142,15 +123,9 @@ func (u addressRepository) GetAll() (addressess []dtos.AddressDto, err error) {
 }
 
 // DeleteAddressByID delete a address by id
-func (u addressRepository) Delete(id uint64) (rowsAffected int64, err error) {
+func (a addressRepository) Delete(id uint64) (rowsAffected int64, err error) {
 
-	db, err := database.OpenConnection()
-	if err != nil {
-		return
-	}
-	defer db.Close()
-
-	statement, err := db.Prepare(`delete from "address" where id = $1`)
+	statement, err := a.db.Prepare(`delete from "address" where id = $1`)
 	if err != nil {
 		return
 	}

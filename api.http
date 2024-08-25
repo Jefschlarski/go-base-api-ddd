@@ -1,0 +1,64 @@
+
+###
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+    "name": "Jeferson Schlarski",
+    "email": "jeferson@gmail.com",
+    "type": 1,
+    "phone": "48991650106",
+    "cpf": "1142335591",
+    "password": "teste123" 
+}
+
+###
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+    "email": "jeferson@gmail.com",
+    "password": "teste123" 
+}
+
+###
+GET http://localhost:8080/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+
+###
+GET http://localhost:8080/city
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+
+###
+GET http://localhost:8080/city/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+
+
+###
+GET http://localhost:8080/state/2/city
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+
+
+#   Complement string `json:"complement,omitempty"`
+#   Number     uint64 `json:"number,omitempty"`
+#   Cep        string `json:"cep,omitempty"`
+#   CityID     uint64 `json:"city_id,omitempty"`
+
+###
+POST http://localhost:8080/address
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+Content-Type: application/json
+
+{
+    "complement": "Testando criação",
+    "number": 110,
+    "cep": "88105304",
+    "city_id": 1
+}
+
+###
+GET http://localhost:8080/address
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ1NTYwOTIsInVzZXJJZCI6MX0.8LvCr8AXlXahpk9wubj9O6-VfzAady_FhtfI9bYYx_Q
+
+
+

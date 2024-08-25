@@ -16,9 +16,9 @@ func NewStateRepository(db *sql.DB) *state {
 }
 
 // GetAll get all states
-func (u state) GetAll() ([]entities.State, error) {
+func (s state) GetAll() ([]entities.State, error) {
 
-	rows, err := u.db.Query("select id, name, uf from state")
+	rows, err := s.db.Query("select id, name, uf from state")
 	if err != nil {
 		return nil, err
 	}
@@ -38,9 +38,9 @@ func (u state) GetAll() ([]entities.State, error) {
 }
 
 // GetByID get a state by ID
-func (u state) GetByID(id uint64) (entities.State, error) {
+func (s state) GetByID(id uint64) (entities.State, error) {
 
-	rows, err := u.db.Query("select id, name, uf from state where id = $1", id)
+	rows, err := s.db.Query("select id, name, uf from state where id = $1", id)
 	if err != nil {
 		return entities.State{}, err
 	}

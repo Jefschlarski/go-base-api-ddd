@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"api/src/interface/api/dtos"
+	"api/src/api/dtos"
 )
 
 type GetCity interface {

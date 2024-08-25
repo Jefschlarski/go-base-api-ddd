@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"api/src/interface/middlewares"
+	"api/src/api/middlewares"
 	"net/http"
 
 	"github.com/gorilla/mux"

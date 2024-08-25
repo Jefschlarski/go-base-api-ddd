@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"api/src/api/dtos"
 	"api/src/application/common/errors"
 	"api/src/application/common/request"
 	"api/src/application/common/responses"
 	"api/src/application/common/security"
 	"api/src/infrastructure/database"
 	"api/src/infrastructure/repositories"
-	"api/src/interface/api/dtos"
 	"net/http"
 )
 
@@ -18,10 +18,10 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := database.OpenConnection()
+	db, err := database.NewDatabase()
 	if err != nil {
-		error := errors.NewError(err.Error(), http.StatusInternalServerError)
-		responses.Error(w, error)
+		err := errors.NewError(err.Error(), http.StatusInternalServerError)
+		responses.Error(w, err)
 		return
 	}
 	defer db.Close()
