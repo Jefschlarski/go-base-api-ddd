@@ -1,4 +1,4 @@
-module api
+module taskmanager
 
 go 1.22.1
 
