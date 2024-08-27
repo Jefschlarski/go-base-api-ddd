@@ -3,9 +3,9 @@ package services
 import (
 	"fmt"
 	"net/http"
-	"taskmanager/internal/api/dtos"
 	"taskmanager/internal/application/interfaces"
 	"taskmanager/internal/common/errors"
+	"taskmanager/internal/interface/dtos"
 )
 
 type createAddress struct {

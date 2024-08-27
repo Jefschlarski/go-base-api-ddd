@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 	cityServices "taskmanager/internal/application/services/city"
-	"taskmanager/internal/common/errors"
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/infrastructure/database"
@@ -13,13 +12,7 @@ import (
 // GetCities gets all states
 func GetCities(w http.ResponseWriter, r *http.Request) {
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	getAllCities := cityServices.NewGetAllCities(repositories.NewCityRepository(db))
 
@@ -40,13 +33,7 @@ func GetCityByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	services := cityServices.NewGetCity(repositories.NewCityRepository(db))
 
@@ -69,13 +56,7 @@ func GetCitiesByStateID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	services := cityServices.NewGetCitiesByStateID(repositories.NewCityRepository(db))
 

@@ -1,7 +1,7 @@
 package router
 
 import (
-	"taskmanager/internal/api/router/routes"
+	"taskmanager/internal/interface/router/routes"
 
 	"github.com/gorilla/mux"
 )

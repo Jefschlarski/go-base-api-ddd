@@ -3,15 +3,14 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"taskmanager/internal/api/dtos"
-	services "taskmanager/internal/application/services/user"
-	"taskmanager/internal/common/errors"
+	userServices "taskmanager/internal/application/services/user"
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/common/security"
 	"taskmanager/internal/domain/entities"
 	"taskmanager/internal/infrastructure/database"
 	"taskmanager/internal/infrastructure/repositories"
+	"taskmanager/internal/interface/dtos"
 )
 
 // CreateUser creates a new user
@@ -23,15 +22,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	createUser := services.NewCreateUser(repositories.NewUserRepository(db))
+	createUser := userServices.NewCreateUser(repositories.NewUserRepository(db))
 
 	id, err := createUser.Execute(&user)
 	if err != nil {
@@ -47,15 +40,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 // GetUsers gets all users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	getAllUsers := services.NewGetAllUsers(repositories.NewUserRepository(db))
+	getAllUsers := userServices.NewGetAllUsers(repositories.NewUserRepository(db))
 
 	users, err := getAllUsers.Execute()
 	if err != nil {
@@ -75,15 +62,9 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	getUser := services.NewGetUser(repositories.NewUserRepository(db))
+	getUser := userServices.NewGetUser(repositories.NewUserRepository(db))
 
 	user, err := getUser.Execute(userID)
 	if err != nil {
@@ -114,15 +95,9 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	updateUser := services.NewUpdateUser(repositories.NewUserRepository(db))
+	updateUser := userServices.NewUpdateUser(repositories.NewUserRepository(db))
 
 	rowsAffected, err := updateUser.Execute(userID, user)
 	if err != nil {
@@ -146,15 +121,9 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	deleteUser := services.NewDeleteUser(repositories.NewUserRepository(db))
+	deleteUser := userServices.NewDeleteUser(repositories.NewUserRepository(db))
 
 	rowsAffected, err := deleteUser.Execute(userID)
 	if err != nil {
@@ -185,15 +154,9 @@ func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
-	updateUserPassword := services.NewUpdateUserPassword(repositories.NewUserRepository(db))
+	updateUserPassword := userServices.NewUpdateUserPassword(repositories.NewUserRepository(db))
 
 	rowsAffected, err := updateUserPassword.Execute(userID, updatePassword)
 	if err != nil {

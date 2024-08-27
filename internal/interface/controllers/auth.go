@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"net/http"
-	"taskmanager/internal/api/dtos"
 	"taskmanager/internal/common/errors"
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/common/security"
 	"taskmanager/internal/infrastructure/database"
 	"taskmanager/internal/infrastructure/repositories"
+	"taskmanager/internal/interface/dtos"
 )
 
 func Auth(w http.ResponseWriter, r *http.Request) {
@@ -18,13 +18,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := database.NewDatabase()
-	if err != nil {
-		err := errors.NewError(err.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	userRepository := repositories.NewUserRepository(db)
 

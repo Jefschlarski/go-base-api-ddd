@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"taskmanager/internal/api/dtos"
 	addressServices "taskmanager/internal/application/services/address"
 	cityServices "taskmanager/internal/application/services/city"
 	"taskmanager/internal/common/errors"
@@ -11,6 +10,7 @@ import (
 	"taskmanager/internal/common/security"
 	"taskmanager/internal/infrastructure/database"
 	"taskmanager/internal/infrastructure/repositories"
+	"taskmanager/internal/interface/dtos"
 )
 
 func CreateAddress(w http.ResponseWriter, r *http.Request) {
@@ -30,13 +30,7 @@ func CreateAddress(w http.ResponseWriter, r *http.Request) {
 	}
 	address.UserID = userID
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err = errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	AddressRepository := repositories.NewAddressRepository(db)
 	CityRepository := repositories.NewCityRepository(db)
@@ -64,13 +58,7 @@ func GetAddressesByUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err = errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	repo := repositories.NewAddressRepository(db)
 	cityRepo := repositories.NewCityRepository(db)
@@ -94,13 +82,7 @@ func UpdateAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err = errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	cityRepositories := repositories.NewCityRepository(db)
 
@@ -143,13 +125,7 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err = errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	repo := repositories.NewAddressRepository(db)
 
@@ -165,13 +141,7 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 
 func GetAddresses(w http.ResponseWriter, r *http.Request) {
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err := errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	repo := repositories.NewAddressRepository(db)
 
@@ -193,13 +163,7 @@ func DeleteAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, error := database.NewDatabase()
-	if error != nil {
-		err = errors.NewError(error.Error(), http.StatusInternalServerError)
-		responses.Error(w, err)
-		return
-	}
-	defer db.Close()
+	db := database.GetPostgresDB()
 
 	repo := repositories.NewAddressRepository(db)
 

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"net/http"
-	"taskmanager/internal/api/middlewares"
+	"taskmanager/internal/interface/middlewares"
 
 	"github.com/gorilla/mux"
 )

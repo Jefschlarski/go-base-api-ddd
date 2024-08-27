@@ -2,7 +2,7 @@ package routes
 
 import (
 	"net/http"
-	"taskmanager/internal/api/controllers"
+	"taskmanager/internal/interface/controllers"
 )
 
 var authRoutes = Route{

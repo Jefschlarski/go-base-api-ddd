@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	"taskmanager/internal/api/dtos"
+	"taskmanager/internal/interface/dtos"
 )
 
 type GetCity interface {

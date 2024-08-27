@@ -1,19 +1,19 @@
 package repositories
 
 import (
-	"taskmanager/internal/api/dtos"
+	"database/sql"
 	"taskmanager/internal/domain/entities"
 	"taskmanager/internal/domain/repositories"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/interface/dtos"
 )
 
 // address struct represents a address repository
 type addressRepository struct {
-	db database.DatabaseInterface
+	db *sql.DB
 }
 
 // NewAddressRepository create a new address repository
-func NewAddressRepository(db database.DatabaseInterface) repositories.AddressRepositoryInterface {
+func NewAddressRepository(db *sql.DB) repositories.AddressRepositoryInterface {
 	return &addressRepository{db}
 }
 

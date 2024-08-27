@@ -8,7 +8,7 @@ drive = "postgres"
 
 [api]
 url = "localhost"
-port = 8080
+port = 8081
 
 [auth]
 key = "SSbw4fKgoUPHS75Epjz1g2R/AOd5ZTonG9At5UNZaSZiIHhKf7nw/a1BaTDHeasX+e8pfxCsrKIrkaB2kfrZLA=="

@@ -2,11 +2,11 @@ package services
 
 import (
 	"net/http"
-	"taskmanager/internal/api/dtos"
 	"taskmanager/internal/application/interfaces"
 	"taskmanager/internal/common/errors"
 	"taskmanager/internal/common/security"
 	"taskmanager/internal/domain/repositories"
+	"taskmanager/internal/interface/dtos"
 )
 
 type updateUserPassword struct {

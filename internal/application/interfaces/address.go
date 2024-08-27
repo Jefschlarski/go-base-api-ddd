@@ -1,8 +1,8 @@
 package interfaces
 
 import (
-	"taskmanager/internal/api/dtos"
 	"taskmanager/internal/domain/entities"
+	"taskmanager/internal/interface/dtos"
 )
 
 type CreateAddress interface {

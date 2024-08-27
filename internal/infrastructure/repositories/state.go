@@ -3,56 +3,53 @@ package repositories
 import (
 	"database/sql"
 	"taskmanager/internal/domain/entities"
+	"taskmanager/internal/domain/repositories"
 )
 
 // state struct represents a state repository
-type state struct {
+type stateRepository struct {
 	db *sql.DB
 }
 
 // NewStateRepository create a new state repository
-func NewStateRepository(db *sql.DB) *state {
-	return &state{db}
+func NewStateRepository(db *sql.DB) repositories.StateRepositoryInterface {
+	return &stateRepository{db}
 }
 
 // GetAll get all states
-func (s state) GetAll() ([]entities.State, error) {
+func (s stateRepository) GetAll() (statesList []entities.State, err error) {
 
 	rows, err := s.db.Query("select id, name, uf from state")
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer rows.Close()
-
-	var states []entities.State
 
 	for rows.Next() {
 		var state entities.State
 		if err = rows.Scan(&state.ID, &state.Name, &state.Uf); err != nil {
-			return nil, err
+			return
 		}
-		states = append(states, state)
+		statesList = append(statesList, state)
 	}
 
-	return states, nil
+	return
 }
 
 // GetByID get a state by ID
-func (s state) GetByID(id uint64) (entities.State, error) {
+func (s stateRepository) GetByID(id uint64) (state entities.State, err error) {
 
 	rows, err := s.db.Query("select id, name, uf from state where id = $1", id)
 	if err != nil {
-		return entities.State{}, err
+		return
 	}
 	defer rows.Close()
 
-	var state entities.State
-
 	if rows.Next() {
 		if err = rows.Scan(&state.ID, &state.Name, &state.Uf); err != nil {
-			return entities.State{}, err
+			return
 		}
 	}
 
-	return state, nil
+	return
 }

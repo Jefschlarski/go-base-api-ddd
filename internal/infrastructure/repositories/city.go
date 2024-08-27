@@ -1,63 +1,59 @@
 package repositories
 
 import (
-	"taskmanager/internal/api/dtos"
+	"database/sql"
 	"taskmanager/internal/domain/repositories"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/interface/dtos"
 )
 
 // city struct represents a city repository
 type cityRepository struct {
-	db database.DatabaseInterface
+	db *sql.DB
 }
 
 // NewCityRepository create a new city repository
-func NewCityRepository(db database.DatabaseInterface) repositories.CityRepositoryInterface {
+func NewCityRepository(db *sql.DB) repositories.CityRepositoryInterface {
 	return &cityRepository{db}
 }
 
 // GetAll get all cities in the database
-func (c cityRepository) GetAll() ([]dtos.CityDto, error) {
+func (c cityRepository) GetAll() (citiesDtoList []dtos.CityDto, err error) {
 
 	rows, err := c.db.Query("select id, state_id, name from city")
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer rows.Close()
-
-	var cities []dtos.CityDto
 
 	for rows.Next() {
 		var city dtos.CityDto
 		if err = rows.Scan(&city.ID, &city.StateID, &city.Name); err != nil {
-			return nil, err
+			return
 		}
-		cities = append(cities, city)
+		citiesDtoList = append(citiesDtoList, city)
 	}
 
-	return cities, nil
+	return
 }
 
 // GetByStateID get all cities by state ID
-func (c cityRepository) GetByStateID(stateID uint64) ([]dtos.CityDto, error) {
+func (c cityRepository) GetByStateID(stateID uint64) (citiesDtoList []dtos.CityDto, err error) {
 
 	rows, err := c.db.Query("select id, state_id, name from city where state_id = $1", stateID)
 	if err != nil {
-		return nil, err
+		return
 	}
 	defer rows.Close()
-
-	var cities []dtos.CityDto
 
 	for rows.Next() {
 		var city dtos.CityDto
 		if err = rows.Scan(&city.ID, &city.StateID, &city.Name); err != nil {
-			return nil, err
+			return
 		}
-		cities = append(cities, city)
+		citiesDtoList = append(citiesDtoList, city)
 	}
 
-	return cities, nil
+	return
 }
 
 // Get get a city by ID and relation

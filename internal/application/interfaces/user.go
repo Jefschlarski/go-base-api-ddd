@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-	"taskmanager/internal/api/dtos"
 	"taskmanager/internal/common/errors"
 	"taskmanager/internal/domain/entities"
+	"taskmanager/internal/interface/dtos"
 )
 
 type CreateUser interface {
