@@ -6,7 +6,7 @@ import (
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/common/security"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/infrastructure/repositories"
 	"taskmanager/internal/interface/dtos"
 )
@@ -18,7 +18,7 @@ func Auth(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	userRepository := repositories.NewUserRepository(db)
 

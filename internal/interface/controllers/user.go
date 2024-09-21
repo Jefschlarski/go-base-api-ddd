@@ -8,7 +8,7 @@ import (
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/common/security"
 	"taskmanager/internal/domain/entities"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/infrastructure/repositories"
 	"taskmanager/internal/interface/dtos"
 )
@@ -22,8 +22,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
-
+	db := pg.GetDB()
 	createUser := userServices.NewCreateUser(repositories.NewUserRepository(db))
 
 	id, err := createUser.Execute(&user)
@@ -40,7 +39,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 // GetUsers gets all users
 func GetUsers(w http.ResponseWriter, r *http.Request) {
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	getAllUsers := userServices.NewGetAllUsers(repositories.NewUserRepository(db))
 
@@ -62,7 +61,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	getUser := userServices.NewGetUser(repositories.NewUserRepository(db))
 
@@ -95,7 +94,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	updateUser := userServices.NewUpdateUser(repositories.NewUserRepository(db))
 
@@ -121,7 +120,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	deleteUser := userServices.NewDeleteUser(repositories.NewUserRepository(db))
 
@@ -154,7 +153,7 @@ func UpdateUserPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	updateUserPassword := userServices.NewUpdateUserPassword(repositories.NewUserRepository(db))
 

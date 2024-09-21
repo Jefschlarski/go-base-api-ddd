@@ -8,6 +8,4 @@ type Address struct {
 	Number     uint64 `json:"number,omitempty"`
 	Cep        string `json:"cep,omitempty"`
 	CityID     uint64 `json:"city_id,omitempty"`
-	CreatedAt  string `json:"created_at,omitempty"`
-	UpdatedAt  string `json:"updated_at,omitempty"`
 }

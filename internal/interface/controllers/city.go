@@ -5,14 +5,14 @@ import (
 	cityServices "taskmanager/internal/application/services/city"
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/infrastructure/repositories"
 )
 
 // GetCities gets all states
 func GetCities(w http.ResponseWriter, r *http.Request) {
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	getAllCities := cityServices.NewGetAllCities(repositories.NewCityRepository(db))
 
@@ -33,7 +33,7 @@ func GetCityByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	services := cityServices.NewGetCity(repositories.NewCityRepository(db))
 
@@ -50,13 +50,12 @@ func GetCityByID(w http.ResponseWriter, r *http.Request) {
 func GetCitiesByStateID(w http.ResponseWriter, r *http.Request) {
 
 	state_id, err := request.GetId(r, "state_id")
-	print(state_id)
 	if err != nil {
 		responses.Error(w, err)
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	services := cityServices.NewGetCitiesByStateID(repositories.NewCityRepository(db))
 

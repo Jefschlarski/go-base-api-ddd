@@ -1,4 +1,4 @@
-package database
+package pg
 
 import (
 	"database/sql"
@@ -15,10 +15,11 @@ var (
 	once sync.Once
 )
 
-// GetPostgresDB retorna a instância singleton da conexão com o banco de dados postgres.
-func GetPostgresDB() *sql.DB {
+// GetDB retorna a instância singleton da conexão com o banco de dados postgres.
+func GetDB() *sql.DB {
 	once.Do(func() {
 		db = openPostgresConnection()
+		initializeDatabase(db)
 	})
 	return db
 }

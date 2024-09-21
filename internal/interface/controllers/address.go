@@ -8,7 +8,7 @@ import (
 	"taskmanager/internal/common/request"
 	"taskmanager/internal/common/responses"
 	"taskmanager/internal/common/security"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/infrastructure/repositories"
 	"taskmanager/internal/interface/dtos"
 )
@@ -30,7 +30,7 @@ func CreateAddress(w http.ResponseWriter, r *http.Request) {
 	}
 	address.UserID = userID
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	AddressRepository := repositories.NewAddressRepository(db)
 	CityRepository := repositories.NewCityRepository(db)
@@ -58,7 +58,7 @@ func GetAddressesByUserID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	repo := repositories.NewAddressRepository(db)
 	cityRepo := repositories.NewCityRepository(db)
@@ -82,7 +82,7 @@ func UpdateAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	cityRepositories := repositories.NewCityRepository(db)
 
@@ -125,7 +125,7 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	repo := repositories.NewAddressRepository(db)
 
@@ -141,7 +141,7 @@ func GetAddressById(w http.ResponseWriter, r *http.Request) {
 
 func GetAddresses(w http.ResponseWriter, r *http.Request) {
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	repo := repositories.NewAddressRepository(db)
 
@@ -163,7 +163,7 @@ func DeleteAddressesByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	repo := repositories.NewAddressRepository(db)
 

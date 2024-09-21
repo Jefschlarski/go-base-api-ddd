@@ -5,18 +5,18 @@ import (
 	"strings"
 	"taskmanager/internal/common/errors"
 	"taskmanager/internal/common/security"
-	"taskmanager/internal/common/validate"
+	"taskmanager/internal/domain/valueobjects"
 )
 
 // User struct represents a user in the database
 type User struct {
-	ID       uint64 `json:"id,omitempty"`
-	Name     string `json:"name,omitempty"`
-	Cpf      string `json:"cpf,omitempty"`
-	Type     uint   `json:"type,omitempty"`
-	Phone    string `json:"phone,omitempty"`
-	Password string `json:"password,omitempty"`
-	Email    string `json:"email,omitempty"`
+	ID       uint64                `json:"id,omitempty"`
+	Name     string                `json:"name,omitempty"`
+	Cpf      valueobjects.Cpf      `json:"cpf,omitempty"`
+	Type     valueobjects.UserType `json:"type,omitempty"`
+	Phone    valueobjects.Phone    `json:"phone,omitempty"`
+	Password string                `json:"password,omitempty"`
+	Email    valueobjects.Email    `json:"email,omitempty"`
 }
 
 // Prepare prepares the user for further processing.
@@ -53,11 +53,14 @@ func (user *User) validate(isCreate bool) string {
 	if user.Cpf == "" {
 		return "cpf is required"
 	}
-	if user.Type == 0 {
-		return "type is required"
+	if err := user.Cpf.Validate(); err != nil {
+		return err.Error()
 	}
 	if user.Phone == "" {
 		return "phone is required"
+	}
+	if err := user.Phone.Validate(); err != nil {
+		return err.Error()
 	}
 	if isCreate && user.Password == "" {
 		return "password is required"
@@ -65,8 +68,7 @@ func (user *User) validate(isCreate bool) string {
 	if user.Email == "" {
 		return "email is required"
 	}
-
-	if err := validate.Email(user.Email); err != nil {
+	if err := user.Email.Validate(); err != nil {
 		return err.Error()
 	}
 
@@ -76,7 +78,7 @@ func (user *User) validate(isCreate bool) string {
 // formater remove empty spaces in user fields
 func (user *User) formater() {
 	user.Name = strings.TrimSpace(user.Name)
-	user.Cpf = strings.TrimSpace(user.Cpf)
-	user.Phone = strings.TrimSpace(user.Phone)
-	user.Email = strings.TrimSpace(user.Email)
+	user.Cpf = user.Cpf.Formater()
+	user.Phone = user.Phone.Formater()
+	user.Email = user.Email.Formater()
 }

@@ -6,9 +6,8 @@ Content-Type: application/json
 {
     "name": "Jeferson Schlarski",
     "email": "jeferson@gmail.com",
-    "type": 1,
-    "phone": "48991650106",
-    "cpf": "1142335591",
+    "phone": "+5548991650106",
+    "cpf": "11423133951",
     "password": "teste123" 
 }
 
@@ -23,21 +22,20 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8081/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 
 ###
 GET http://localhost:8081/city
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 
 ###
 GET http://localhost:8081/city/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 
 
 ###
-GET http://localhost:8081/state/2/city
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
-
+GET http://localhost:8081/state/1/city
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 
 #   Complement string `json:"complement,omitempty"`
 #   Number     uint64 `json:"number,omitempty"`
@@ -46,7 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0c
 
 ###
 POST http://localhost:8081/address
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 Content-Type: application/json
 
 {
@@ -58,7 +56,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8081/address
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjQ3MzUxODQsInVzZXJJZCI6MX0.gzng-WvwwVStWe0ltBNq-LhlRZ269u8Z3DFYl7ZweW8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3MjY5NzI4MzIsInVzZXJJZCI6MX0.wocCj_7XSj60MNuqkKVLL2U6_2eEhNfsspV4MRmvCFg
 
 
 

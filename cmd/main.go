@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"taskmanager/internal/configs"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/interface/router"
 )
 
@@ -18,7 +18,7 @@ func main() {
 
 	apiConfigs := configs.GetApiConfig()
 
-	database.GetPostgresDB()
+	pg.GetDB()
 
 	r := router.GenRouter()
 

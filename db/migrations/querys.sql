@@ -1,11 +1,13 @@
-DROP TABLE IF EXISTS "user";
+CREATE SCHEMA IF NOT EXISTS public;
 
-CREATE TABLE IF NOT EXISTS "user" (
+DROP TABLE IF EXISTS public."user";
+
+CREATE TABLE IF NOT EXISTS public."user" (
     id SERIAL primary key,
     name varchar(50) not null,
     cpf varchar(11) not null unique,
     type int not null,
-    phone varchar(11) not null unique,
+    phone varchar(15) not null unique,
     password varchar(100) not null,
     email varchar(50) not null unique,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
@@ -76,11 +78,6 @@ INSERT INTO state("id", "name", "uf") VALUES (24, 'Santa Catarina', 'SC');
 INSERT INTO state("id", "name", "uf") VALUES (25, 'Sergipe', 'SE');
 INSERT INTO state("id", "name", "uf") VALUES (26, 'São Paulo', 'SP');
 INSERT INTO state("id", "name", "uf") VALUES (27, 'Tocantins', 'TO');
-
-
-
-
-
 
 
 INSERT INTO city("id", "name", "state_id") VALUES (1, 'Afonso Cláudio', 8);

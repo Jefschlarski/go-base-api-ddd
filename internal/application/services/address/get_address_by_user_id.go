@@ -37,7 +37,6 @@ func (s *getAddressByUserId) GetByUserID(userId uint64) (addressesDtos []dtos.Re
 			Number:     address.Number,
 			Cep:        address.Cep,
 			City:       city,
-			CreatedAt:  address.CreatedAt,
 		})
 	}
 

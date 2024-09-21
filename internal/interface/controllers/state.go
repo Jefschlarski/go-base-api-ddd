@@ -4,13 +4,13 @@ import (
 	"net/http"
 	stateServices "taskmanager/internal/application/services/state"
 	"taskmanager/internal/common/responses"
-	"taskmanager/internal/infrastructure/database"
+	"taskmanager/internal/infrastructure/pg"
 	"taskmanager/internal/infrastructure/repositories"
 )
 
 // GetStates gets all states
 func GetStates(w http.ResponseWriter, r *http.Request) {
-	db := database.GetPostgresDB()
+	db := pg.GetDB()
 
 	getAllStates := stateServices.NewGetAllStates(repositories.NewStateRepository(db))
 	states, err := getAllStates.Execute()

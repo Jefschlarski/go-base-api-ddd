@@ -2,7 +2,7 @@
  
 #### comando para iniciar o servidor
 ```bash
- go run main.go
+ go run ./cmd/main.go
 ```
 ### Lista de pacotes instalados
 

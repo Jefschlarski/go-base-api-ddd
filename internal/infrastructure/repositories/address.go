@@ -37,7 +37,7 @@ func (a addressRepository) Create(address dtos.CreateAddressDto) (lastInsertID u
 // GetAddressesByUserID get all addresses by user id
 func (a addressRepository) GetByUserID(userID uint64) (addressess []entities.Address, err error) {
 
-	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address" where user_id = $1`, userID)
+	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id from "address" where user_id = $1`, userID)
 	if err != nil {
 		return
 	}
@@ -45,7 +45,7 @@ func (a addressRepository) GetByUserID(userID uint64) (addressess []entities.Add
 
 	for rows.Next() {
 		var address entities.Address
-		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
+		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
 			return
 		}
 		addressess = append(addressess, address)
@@ -79,14 +79,14 @@ func (a addressRepository) Update(address dtos.AddressDto) (rowsAffected int64, 
 // GetAddressByID get a address by id
 func (a addressRepository) Get(id uint64) (address entities.Address, err error) {
 
-	row, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address" where id = $1`, id)
+	row, err := a.db.Query(`select id, user_id, complement, number, cep, city_id from "address" where id = $1`, id)
 	if err != nil {
 		return
 	}
 	defer row.Close()
 
 	if row.Next() {
-		if err = row.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
+		if err = row.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
 			return
 		}
 	}
@@ -97,7 +97,7 @@ func (a addressRepository) Get(id uint64) (address entities.Address, err error) 
 // GetAddresses get all addresses
 func (a addressRepository) GetAll() (addressess []entities.Address, err error) {
 
-	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id, created_at, updated_at from "address"`)
+	rows, err := a.db.Query(`select id, user_id, complement, number, cep, city_id from "address"`)
 	if err != nil {
 		return
 	}
@@ -105,7 +105,7 @@ func (a addressRepository) GetAll() (addressess []entities.Address, err error) {
 
 	for rows.Next() {
 		var address entities.Address
-		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID, &address.CreatedAt, &address.UpdatedAt); err != nil {
+		if err = rows.Scan(&address.ID, &address.UserID, &address.Complement, &address.Number, &address.Cep, &address.CityID); err != nil {
 			return
 		}
 		addressess = append(addressess, address)
